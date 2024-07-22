@@ -204,6 +204,18 @@ impl Renderer {
                         (display_height / height).max(1.0),
                     ]
                 }
+                BackgroundMode::FitWidth => {
+                    // In this case we calculate the width relative to the height of the
+                    // screen with the ratio of the image
+                    let width = display_height * image_ratio;
+                    // Same thing as above, just with the width
+                    let height = display_width / image_ratio;
+                    // Then we calculate the proportions
+                    [
+                        (display_width / width).max(1.0),
+                        (display_height / height),
+                    ]
+                }
                 BackgroundMode::Tile => {
                     let width_proportion = display_width / image_width * display_ratio;
                     let height_proportion = display_height / image_height * display_ratio;
@@ -273,6 +285,7 @@ impl Renderer {
                     BackgroundMode::Stretch
                     | BackgroundMode::Center
                     | BackgroundMode::Fit
+                    | BackgroundMode::FitWidth
                     | BackgroundMode::FitBorderColor,
                 ) => 0.5,
                 (None, BackgroundMode::Tile) => 0.0,
@@ -287,7 +300,7 @@ impl Renderer {
             self.check_error("calling Uniform1f")?;
 
             let texture_wrap = match mode {
-                BackgroundMode::Stretch | BackgroundMode::Center | BackgroundMode::Fit => {
+                BackgroundMode::Stretch | BackgroundMode::Center | BackgroundMode::Fit | BackgroundMode::FitWidth => {
                     gl::CLAMP_TO_BORDER_EXT
                 }
                 BackgroundMode::Tile => gl::REPEAT,

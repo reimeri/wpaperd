@@ -61,6 +61,7 @@ pub enum BackgroundMode {
     #[default]
     Center,
     Fit,
+    FitWidth,
     Tile,
     FitBorderColor,
 }
